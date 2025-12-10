@@ -1,0 +1,51 @@
+services:
+
+  # -----------------------------
+  # ROS 2 Development Container
+  # -----------------------------
+  ros2-dev:
+    build:
+      context: .
+      dockerfile: docker/ros2_dev/Dockerfile
+    container_name: ros2-dev
+    volumes:
+      - ./ros2_ws:/ros2_ws
+    command: bash
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}      
+    tty: true
+
+  # -----------------------------
+  # STM32 Development Container
+  # -----------------------------
+  stm32-dev:
+    build:
+      context: .
+      dockerfile: docker/stm32_dev/Dockerfile
+    container_name: stm32-dev
+    privileged: true
+    devices:
+      - "/dev/bus/usb:/dev/bus/usb"
+    volumes:
+      - ./firmware:/stm32_ws
+    command: bash
+    tty: true
+
+  # -----------------------------
+  # ROS GUI Container (RViz / MoveIt)
+  # -----------------------------
+  # ros2-gui:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/ros-gui/Dockerfile  # Separate image with ros-humble-desktop
+  #   container_name: ros2-gui
+  #   volumes:
+  #     - ./ros2_ws:/ros2_ws
+  #   network_mode: host
+  #   environment:
+  #     - DISPLAY=${DISPLAY}                 # Forward host display
+  #     - QT_X11_NO_MITSHM=1                 # Fix some Qt graphical issues
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix       # X11 socket for GUI forwarding
+  #   tty: true
